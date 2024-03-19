@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags %}
+{% block content %}
+<section class="slider_section ">
+    <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            {% for carousel_image in page.carousel_images.all %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <h1>
+                                    {{ carousel_image.title }}
+                                </h1>
+                                <p>
+                                    {{ carousel_image.description }}
+                                </p>
+                                <div class="btn-box">
+                                    <a href="" class="btn1">
+                                        Read More
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="img-box">
+                                {% image carousel_image.carousel_image original %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <ol class="carousel-indicators">
+            {% for carousel_image in page.carousel_images.all %}
+            <li data-target="#customCarousel1" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>
+{% endblock %}
