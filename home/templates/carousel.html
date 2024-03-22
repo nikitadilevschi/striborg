@@ -1,6 +1,4 @@
-{% extends "base.html" %}
 {% load wagtailimages_tags %}
-{% block content %}
 <section class="slider_section ">
     <div id="customCarousel1" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
@@ -16,16 +14,11 @@
                                 <p>
                                     {{ carousel_image.description }}
                                 </p>
-                                <div class="btn-box">
-                                    <a href="" class="btn1">
-                                        Read More
-                                    </a>
-                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="img-box">
-                                {% image carousel_image.carousel_image original %}
+                                {% image carousel_image.carousel_image scale-50 %}
                             </div>
                         </div>
                     </div>
@@ -40,4 +33,3 @@
         </ol>
     </div>
 </section>
-{% endblock %}

@@ -1,0 +1,38 @@
+{% load wagtailimages_tags %}
+<!-- about section -->
+
+<section class="about_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>
+                <span>  {{ self.block_title }}  </span>
+            </h2>
+            <p>
+                {{ self.block_description}}
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class="img-box">
+                    {% image self.image fill-500x500 as img %}
+                    <img src="{{ img.url }}" alt="{{ img.alt }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <h3>
+                        {{ self.about_title }}
+                    </h3>
+                    <p>
+                        {{ self.about_description }}
+                    </p>
+                    <a href="{{ self.button_page.url }}">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- end about section -->

@@ -1,6 +1,6 @@
 from django.db import models
 
-from wagtail.models import Page, ParentalKey, Orderable
+from wagtail.models import Page, ParentalKey, Orderable, Site
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 
@@ -9,26 +9,12 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.embeds.blocks import EmbedBlock
 
 from modelcluster.models import ClusterableModel
-from wagtail.snippets.models import register_snippet
 from modelcluster.fields import ParentalKey
-from wagtail.snippets.blocks import SnippetChooserBlock
-
-
-
-@register_snippet
-class Header(models.Model):
-
-    bodytext = RichTextField()
-
-    panels = [
-        FieldPanel('bodytext'),
-    ]
-    def __str__(self):
-        return self.bodytext
-
+from home import blocks
 
 class HomePageCarouselImages(Orderable):
-    """Between 1 and 5 images for the home page carousel."""
+    """Between 1 and 3 images for the home page carousel."""
+
 
     page = ParentalKey("home.HomePage", related_name="carousel_images")
     carousel_image = models.ForeignKey(
@@ -54,36 +40,48 @@ class HomePage(Page):
     max_count = 1
 
     # Database fields
-    subtitle = models.CharField(max_length=100,
-                                blank=True,
-                                null=True)
-
-    rtfbody = RichTextField(blank=True, null=True)
-
     body = StreamField([
         ('rtfblock', RichTextBlock()),
         ('image', ImageChooserBlock()),
         ('embed', EmbedBlock()),
+        ('cards', blocks.CardBlock()),
+        ('about_us_blocks', blocks.AboutUsBlock()),
     ],
         null=True, blank=True)
 
     #Interface admin fields
     content_panels = Page.content_panels + [
         MultiFieldPanel([
-            InlinePanel("carousel_images", max_num=5, min_num=1, label="Carousel"),
+            InlinePanel("carousel_images", max_num=3, min_num=1, label="Carousel"),
         ]),
         MultiFieldPanel([
-            FieldPanel('subtitle'),
-            FieldPanel('rtfbody'),
             FieldPanel('body'),
         ])
     ]
 
-class ServicePage(Page):
-    body = RichTextField(blank=True, null=True)
+class OurServices(Page):
 
-    content_panels = Page.content_panels + [
-        FieldPanel('body'),
-    ]
+    template = "home/our_services.html"
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        home_page = HomePage.objects.first()
+        if home_page:
+            context['cards'] = [block for block in home_page.body if isinstance(block.block, blocks.CardBlock)]
+        else:
+            print("HomePage not found")
+        return context
 
 
+class AboutUs(Page):
+
+    template = "home/about_us.html"
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        home_page = HomePage.objects.first()
+        if home_page:
+            context['about_us_blocks'] = [block for block in home_page.body if isinstance(block.block, blocks.AboutUsBlock)]
+        else:
+            print("HomePage not found")
+        return context
