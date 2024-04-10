@@ -65,3 +65,36 @@ class Menu(ClusterableModel):
     ]
     def __str__(self):
         return self.title
+
+class FooterItem(Orderable):
+    block_title = models.CharField(max_length=255,null=True, blank=True)
+    address = models.CharField(max_length=255,null=True, blank=True)
+    phone_number = models.CharField(max_length=20,null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    info_text = models.TextField(null=True, blank=True)
+
+    panels = [
+        FieldPanel('block_title'),
+        FieldPanel('address'),
+        FieldPanel('phone_number'),
+        FieldPanel('email'),
+        FieldPanel('info_text'),
+    ]
+
+    page = ParentalKey('Footer', related_name='footer_items')
+
+@register_snippet
+class Footer(ClusterableModel):
+    """The main Footer clustarable model."""
+    title = models.CharField(max_length=100)
+    slug = AutoSlugField(populate_from='title', editable=True)
+
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('title'),
+            FieldPanel('slug'),
+        ], heading='Footer'),
+        InlinePanel('footer_items', label='Footer Items'),
+    ]
+    def __str__(self):
+        return self.title

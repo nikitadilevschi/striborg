@@ -148,8 +148,12 @@ a:focus {
 
 }
 
+
 .header_section {
   padding: 15px 0;
+  background: linear-gradient(130deg, #231a6f, #0f054c);
+
+
 
   .container-fluid {
     padding-right: 25px;
@@ -545,6 +549,10 @@ a:focus {
       overflow: hidden;
       transition: all .1s;
       margin-top: 45px;
+      height: 550px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       // background-color: #053068;
       background: linear-gradient(to bottom, lighten($color: $primary2, $amount: 3), lighten($color: $primary2, $amount: 5));
 
@@ -554,8 +562,8 @@ a:focus {
         align-items: center;
 
         img {
-          width: 120px;
-          border-radius: 100%;
+          width: 80%;
+          border-radius: 10%;
           border: 5px solid $white;
         }
 
@@ -574,12 +582,15 @@ a:focus {
 
       .social_box {
         padding: 10px 45px 20px 45px;
-        display: flex;
-        justify-content: space-between;
+        position: relative;
 
         a {
           color: $white;
           font-size: 22px;
+          position: absolute;
+          bottom: 10px; // adjust this value as needed
+          left: 50%;
+          transform: translateX(-50%);
 
           &:hover {
             color: $primary1;

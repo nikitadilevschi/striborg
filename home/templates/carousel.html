@@ -1,35 +1,90 @@
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags wagtailcore_tags %}
 <section class="slider_section ">
     <div id="customCarousel1" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            {% for carousel_image in page.carousel_images.all %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="detail-box">
-                                <h1>
-                                    {{ carousel_image.title }}
-                                </h1>
-                                <p>
-                                    {{ carousel_image.description }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="img-box">
-                                {% image carousel_image.carousel_image scale-50 %}
+        <!-- TradingView Widget BEGIN -->
+        <div  style="height: 150px;">
+            <div class="tradingview-widget-container " style="height: 250px">
+                <div class="tradingview-widget-container__widget"></div>
+                <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"></a></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                    {
+                        "symbols": [
+                        {
+                            "proName": "FOREXCOM:SPXUSD",
+                            "title": "S&P 500 Index"
+                        },
+                        {
+                            "proName": "FOREXCOM:NSXUSD",
+                            "title": "US 100 Cash CFD"
+                        },
+                        {
+                            "proName": "FX_IDC:EURUSD",
+                            "title": "EUR to USD"
+                        },
+                        {
+                            "proName": "BITSTAMP:BTCUSD",
+                            "title": "Bitcoin"
+                        },
+                        {
+                            "proName": "BITSTAMP:ETHUSD",
+                            "title": "Ethereum"
+                        },
+                        {
+                            "description": "Gold Futures",
+                            "proName": "COMEX:GC1!"
+                        },
+                        {
+                            "description": "Bitcoin Futures",
+                            "proName": "CME:BTC1!"
+                        },
+                        {
+                            "description": "Solana MarketCap",
+                            "proName": "CRYPTOCAP:SOL"
+                        },
+                        {
+                            "description": "Solana-USDT",
+                            "proName": "BINANCE:SOLUSDT"
+                        }
+                    ],
+                        "showSymbolLogo": true,
+                        "isTransparent": true,
+                        "displayMode": "adaptive",
+                        "colorTheme": "dark",
+                        "locale": "en"
+                    }
+                </script>
+            </div>
+        </div>
+            <!-- TradingView Widget END -->
+            <div class="carousel-inner">
+                {% for carousel_image in page.carousel_images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="detail-box">
+                                        <h1>
+                                            {{ carousel_image.title|richtext  }}
+                                        </h1>
+                                        <p>
+                                            {{ carousel_image.description }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="img-box">
+                                        {% image carousel_image.carousel_image fill-555x475  class="img-box" %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            <ol class="carousel-indicators">
+                {% for carousel_image in page.carousel_images.all %}
+                    <li data-target="#customCarousel1" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                {% endfor %}
+            </ol>
         </div>
-        <ol class="carousel-indicators">
-            {% for carousel_image in page.carousel_images.all %}
-            <li data-target="#customCarousel1" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
-            {% endfor %}
-        </ol>
-    </div>
 </section>

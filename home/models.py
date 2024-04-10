@@ -11,6 +11,7 @@ from wagtail.embeds.blocks import EmbedBlock
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from home import blocks
+import feedparser
 
 class HomePageCarouselImages(Orderable):
     """Between 1 and 3 images for the home page carousel."""
@@ -24,7 +25,11 @@ class HomePageCarouselImages(Orderable):
         on_delete=models.SET_NULL,
         related_name="+",
     )
-    title = models.CharField(max_length=255, blank=True, null=True)
+    title = RichTextField(max_length=255, blank=True, null=True, features=[
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'link', 'document-link',
+        'image', 'embed', 'ol', 'ul', 'blockquote', 'strikethrough', 'superscript',
+        'subscript', 'code', 'hr'
+    ],verbose_name="Title | Title must be included in H1 tag")
     description = models.TextField(blank=True, null=True)
 
     panels = [
@@ -34,6 +39,8 @@ class HomePageCarouselImages(Orderable):
     ]
 
 
+
+
 class HomePage(Page):
 
     template = "home/home_page.html"
@@ -41,11 +48,10 @@ class HomePage(Page):
 
     # Database fields
     body = StreamField([
-        ('rtfblock', RichTextBlock()),
-        ('image', ImageChooserBlock()),
-        ('embed', EmbedBlock()),
         ('cards', blocks.CardBlock()),
         ('about_us_blocks', blocks.AboutUsBlock()),
+        ('market_overview_blocks', blocks.MarketOverviewBlock()),
+        ('feed_block', blocks.RSSFeedBlock()),
     ],
         null=True, blank=True)
 
@@ -85,3 +91,30 @@ class AboutUs(Page):
         else:
             print("HomePage not found")
         return context
+
+class MarketOverview(Page):
+
+    template = "home/market_overview.html"
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        home_page = HomePage.objects.first()
+        if home_page:
+            context['market_overview_blocks'] = [block for block in home_page.body if isinstance(block.block, blocks.MarketOverviewBlock)]
+        else:
+            print("HomePage not found")
+        return context
+
+class Feed(Page):
+
+    template = "home/feed.html"
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        home_page = HomePage.objects.first()
+        if home_page:
+            context['feed_block'] = [block for block in home_page.body if isinstance(block.block, blocks.RSSFeedBlock)]
+        else:
+            print("HomePage not found")
+        return context
+

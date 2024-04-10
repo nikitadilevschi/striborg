@@ -1,0 +1,43 @@
+{% load wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+<!-- team section -->
+<section class="team_section layout_padding">
+    <div class="container-fluid">
+        <div class="heading_container heading_center">
+            <h2 class="">
+                 <span>{{ self.block_title }}</span>
+            </h2>
+        </div>
+        <div class="team_container">
+            <div class="row">
+                {% for entry in feed %}
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="box ">
+                            <div class="img-box">
+                                {% if entry.image_url %}
+                                    <img src="{{ entry.image_url }}" alt="{{ entry.title }}">
+                                {% endif %}
+                            </div>
+                            <div class="detail-box">
+                                <h5>
+                                    {{ entry.title }}
+                                </h5>
+                                <p>
+                                    {{ entry.description }}
+                                </p>
+                                <p>{{ entry.published }}
+                                </p>
+                            </div>
+                            <div class="social_box">
+                                <a href="{{ entry.link }}" class="rss-link">Read more</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+<!-- end team section -->

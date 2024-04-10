@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-md-6 ">
                 <div class="img-box">
-                    {% image self.image fill-500x500 as img %}
+                    {% image self.image original as img %}
                     <img src="{{ img.url }}" alt="{{ img.alt }}">
                 </div>
             </div>

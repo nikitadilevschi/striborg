@@ -1,4 +1,5 @@
 {% load static wagtailcore_tags menus_tags %}
+{% get_homepage as homepage %}
 
 {% get_menu "main-navigation" as navigation %}
 
@@ -6,11 +7,12 @@
 <header class="header_section">
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{% pageurl homepage %}">
             <span>
-              Logo
+              Striborg
             </span>
             </a>
+
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class=""> </span>
@@ -19,10 +21,18 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav  ">
                     {% for item in navigation.menu_items.all %}
-                    <li class="nav-item">
-                        <a href="{{ item.link }}" class="nav-link"{% if item.open_in_new_tab %} target="_blank"{% endif %}>{{ item.title }} </a>
-                    </li>
+                        <li class="{% if forloop.first %}nav-item active{% else %} nav-item{% endif %}">
+                            <a href="{{ item.link }}" class="nav-link"{% if item.open_in_new_tab %} target="_blank"{% endif %}>{{ item.title }} </a>
+                        </li>
                     {% endfor %}
+                    <li class="nav-item d-flex">
+                        {% if request.user.is_authenticated %}
+                            <a class="nav-link" href="{% url 'upload_document' %}">Documents</a>
+                            <a class="nav-link" href="{% url 'account_logout' %}"> <i class="fa fa-user" aria-hidden="true"></i> Logout</a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'account_login' %}"> <i class="fa fa-user" aria-hidden="true"></i> Login</a>
+                        {% endif %}
+                    </li>
                 </ul>
             </div>
         </nav>

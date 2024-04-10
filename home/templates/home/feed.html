@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+
+    {% for block in feed_block %}
+            {% include_block block %}
+
+    {% endfor %}
+
+{% endblock content %}

@@ -9,10 +9,10 @@
         {% block title %}
             {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
         {% endblock %}
-        {% block title_suffix %}
-            {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
-        {% endblock %}
+{#        {% block title_suffix %}#}
+{#            {% wagtail_site as current_site %}#}
+{#            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}#}
+{#        {% endblock %}#}
     </title>
     {% if page.search_description %}
         <meta name="description" content="{{ page.search_description }}" />
@@ -35,13 +35,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <!-- font awesome style -->
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
 
     {% block extra_css %}
-   {% endblock %}
+    {% endblock %}
 
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %} d-flex flex-column min-vh-100 {% endblock %}">
 
 {% block navbar %}
     {% include "header.html" %}
@@ -51,7 +53,7 @@
 
 {% block content %}
 {% endblock %}
-
+{% include "footer.html" %}
 {% block extra_js %}
     <!-- jQery -->
     <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
@@ -65,6 +67,42 @@
     </script>
     <!-- custom js -->
     <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+    <script>
+    // Путь к PDF-файлу
+    var pdfUrl = 'https://striborgfinance.info/media/documents/FORMS_Blank_P1BKCOD.docx';
+
+    // Загрузка и отображение PDF
+    pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
+        // Получение количества страниц в PDF
+        var numPages = pdf.numPages;
+
+        // Контейнер, в котором будет отображаться PDF
+        var pdfViewer = document.getElementById('pdfViewer');
+
+        // Цикл по страницам PDF
+        for (var pageNum = 1; pageNum <= numPages; pageNum++) {
+            // Создание элемента canvas для отображения страницы PDF
+            var canvas = document.createElement('canvas');
+            canvas.className = 'pdf-page';
+            pdfViewer.appendChild(canvas);
+
+            // Рендеринг страницы PDF на canvas
+            pdf.getPage(pageNum).then(function(page) {
+                var viewport = page.getViewport({ scale: 1.5 }); // Масштаб страницы
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        }
+    });
+</script>
+
 {% endblock %}
 </body>
 </html>

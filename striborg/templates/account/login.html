@@ -1,0 +1,92 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+
+{% load allauth account %}
+{% block head_title %}
+    {% trans "Sign In" %}
+{% endblock head_title %}
+{% block content %}
+    {#    {% element h1 %}#}
+    {#        {% trans "Sign In" %}#}
+    {#    {% endelement %}#}
+    {#    <p>#}
+    {#        {% blocktrans %}If you have not created an account yet, then please#}
+    {#            <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}#}
+    {#    </p>#}
+    {#    {% url 'account_login' as login_url %}#}
+    {#    {% element form form=form method="post" action=login_url tags="entrance,login" %}#}
+    {#        {% slot body %}#}
+    {#            {% csrf_token %}#}
+    {#            {% element fields form=form unlabeled=True %}#}
+    {#            {% endelement %}#}
+    {#            {% if redirect_field_value %}#}
+    {#                <input type="hidden"#}
+    {#                       name="{{ redirect_field_name }}"#}
+    {#                       value="{{ redirect_field_value }}" />#}
+    {#            {% endif %}#}
+    {#        {% endslot %}#}
+    {#        {% slot actions %}#}
+    {#            {% element button type="submit" tags="prominent,login" %}#}
+    {#                {% trans "Sign In" %}#}
+    {#            {% endelement %}#}
+    {#        {% endslot %}#}
+    {#    {% endelement %}#}
+    {#    {% if SOCIALACCOUNT_ENABLED %}#}
+    {#        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}#}
+    {#    {% endif %}#}
+
+    <!-- Login 13 - Bootstrap Brain Component -->
+    <section style="height: 100%" class="bg-light py-3 py-md-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+                    <div style="margin-top: 50%"  class="card border border-light-subtle rounded-3 shadow-sm">
+                        <div  class="card-body p-3 p-md-4 p-xl-5">
+                            <h1 class="fs-1 fw-normal text-center text-primary mb-4">Sign in to your account</h1>
+                            <form method="POST" action="{% url 'account_login' %}">
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <div class="alert alert-danger">
+                                            {{ error|escape }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <div class="row gy-2 overflow-hidden">
+                                    {% for field in form %}
+                                        <div class="col-12">
+                                            <div class="form-floating mb-3">
+                                                <input type="{{ field.field.widget.input_type }}" class="form-control" name="{{ field.html_name }}" id="{{ field.auto_id }}" required>
+                                                <label for="{{ field.auto_id }}">{{ field.label }}</label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex gap-2 justify-content-between">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" name="rememberMe" id="rememberMe">
+                                            {{ form.remember }}
+                                            <label class="form-check-label text-secondary" for="id_remember">
+                                                {% trans "Keep me logged in" %}
+                                            </label>
+                                        </div>
+                                        <a href="{% url 'account_reset_password' %}" class="link-primary text-decoration-none">{% trans "Forgot password?" %}</a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid my-3">
+                                        <button class="btn btn-primary btn-lg" type="submit">{% trans "Log in" %}</button>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <p class="m-0 text-secondary text-center">{% trans "Don't have an account?" %} <a href="{% url 'account_signup' %}" class="link-primary text-decoration-none">{% trans "Sign up" %}</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

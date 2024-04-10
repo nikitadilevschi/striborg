@@ -1,0 +1,58 @@
+{% load static wagtailcore_tags menus_tags %}
+{% get_homepage as homepage %}
+
+{% get_menu "main-navigation" as navigation %}
+{% get_footer "main-footer" as footer %}
+
+<!-- Footer section -->
+<section class="info_section layout_padding2 mt-auto">
+    <div class="container">
+        <div class="row">
+            {% for item in footer.footer_items.all %}
+                <div class="col-md-6 col-lg-3 info_col">
+                    <div class="info_detail">
+                        <h4>
+                            {{ item.block_title }}
+                        </h4>
+                        {% if item.address %}
+                            <p>
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> <!-- Icon for address -->
+                                {{ item.address }}
+                            </p>
+                        {% endif %}
+                        {% if item.phone_number %}
+                            <p>
+                                <i class="fa fa-phone" aria-hidden="true"></i> <!-- Icon for phone -->
+                                {{ item.phone_number }}
+                            </p>
+                        {% endif %}
+                        {% if item.email %}
+                            <p>
+                                <i class="fa fa-envelope" aria-hidden="true"></i> <!-- Icon for email -->
+                                {{ item.email }}
+                            <p>
+                        {% endif %}
+                        {{ item.info_text }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="col-md-6 col-lg-2 mx-auto info_col">
+                <div class="info_link_box">
+                    <h4>
+                        Links
+                    </h4>
+                    <div class="info_links">
+                        {% for item in navigation.menu_items.all %}
+                            <a class="active" href="{{ item.link }}"
+                                    {% if item.open_in_new_tab %} target="_blank"{% endif %}>
+                                {{ item.title }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end Footer section -->
