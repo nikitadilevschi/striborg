@@ -3,6 +3,10 @@ from django.db import models
 from wagtail.models import Page, ParentalKey, Orderable, Site
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
+from wagtail.documents import get_document_model
+from wagtail.documents.models import Document
+from wagtail.documents.models import Document as WagtailDocument
+from django.core.paginator import Paginator
 
 from wagtail.blocks import CharBlock, RichTextBlock, StructBlock, CharBlock, TextBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -11,7 +15,7 @@ from wagtail.embeds.blocks import EmbedBlock
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from home import blocks
-import feedparser
+
 
 class HomePageCarouselImages(Orderable):
     """Between 1 and 3 images for the home page carousel."""
@@ -118,3 +122,30 @@ class Feed(Page):
             print("HomePage not found")
         return context
 
+
+class Documents(Page):
+
+    template = "home/documents.html"
+
+    document = models.ForeignKey(
+        get_document_model(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+
+    content_panels = Page.content_panels + [
+        # ...
+        FieldPanel('document'),
+    ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        documents = Document.objects.all()
+
+        paginator = Paginator(documents, 4)  # Show 4 documents per page
+        page_number = request.GET.get('page', 1)
+        documents = paginator.get_page(page_number)
+
+        context['documents'] = documents
+        return context
