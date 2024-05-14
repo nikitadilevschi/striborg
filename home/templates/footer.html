@@ -15,10 +15,10 @@
                             {{ item.block_title }}
                         </h4>
                         {% if item.address %}
-                            <p>
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ item.address|urlencode }}">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i> <!-- Icon for address -->
                                 {{ item.address }}
-                            </p>
+                            </a>
                         {% endif %}
                         {% if item.phone_number %}
                             <p>
